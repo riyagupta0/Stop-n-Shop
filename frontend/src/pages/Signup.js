@@ -3,6 +3,7 @@ import loginIcons from '../assest/signin.gif'
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link } from 'react-router-dom'; 
+import imageToBase64 from '../helpers/imageToBase64';
 
 const Signup = () => {
 
@@ -31,6 +32,18 @@ const Signup = () => {
         e.preventDefault();  
     }
     
+    const handleUploadPic = async(e) => {
+        const file = e.target.files[0];
+
+        const imagePic = await imageToBase64(file)
+        
+        setData((prev) => {
+            return{
+                ...prev, 
+                profilePic : imagePic
+            }
+        })
+    }
     console.log(
     "data login", data
     )
@@ -38,14 +51,21 @@ const Signup = () => {
   return (
     <section id='signup'>
         <div className='mx-auto container py-5'>
-            <div className='bg-white p-5  w-full  max-w-md  mx-auto  '>
-                <div className='w-20 h-20 mx-auto '>
+            <div className='bg-white p-5  w-full  max-w-sm  mx-auto '>
+
+                <div className='w-20 h-20 mx-auto relative rounded-full overflow-hidden '>
                     <div>
-                    <img src={loginIcons} alt='login icons' />
+                    <img src={data.profilePic || loginIcons } alt='login icons' />
                     </div>
-                    <div className='text-xs'>
+                    <form>
+                        <label>
+                        <div className='text-xs bg-slate-200 pb-2 pt-2  text-center absolute bottom-0 w-full bg-opacity-80 cursor-pointer'>
                         Upload Photo
-                    </div>
+                        </div>
+                            <input type='file'  className='hidden ' onChange={handleUploadPic}/> 
+                        </label>
+                    
+                    </form>
                       
                 </div>
 
@@ -61,7 +81,8 @@ const Signup = () => {
                         name='name'
                         onChange={handleOnChange}
                          value={data.name}
-                        className='w-full h-full outline-none bg-transparent'  />
+                        className='w-full h-full outline-none bg-transparent' 
+                        required />
                         </div>
                     </div>
 
@@ -76,7 +97,8 @@ const Signup = () => {
                         name='email'
                         onChange={handleOnChange}
                          value={data.email}
-                        className='w-full h-full outline-none bg-transparent'  />
+                        className='w-full h-full outline-none bg-transparent'
+                        required  />
                         </div>
                     </div>
 
@@ -90,7 +112,8 @@ const Signup = () => {
                             name='password'
                             onChange={handleOnChange}
                             value={data.password}
-                            placeholder='Enter Password' className='w-full h-full outline-none bg-transparent' />
+                            placeholder='Enter Password' 
+                            required className='w-full h-full outline-none bg-transparent' />
                             <div className='cursor-pointer text-xl' onClick={() => setShowPassword((prev) => !prev)}>
                             <span>
                                 {
@@ -113,6 +136,7 @@ const Signup = () => {
                             name='confirmPassword'
                             onChange={handleOnChange}
                             value={data.confirmPassword}
+                            required
                             placeholder='Enter Confirm Password' className='w-full h-full outline-none bg-transparent' />
                             <div className='cursor-pointer text-xl' onClick={() => setShowConfirmPassword((prev) => !prev)}>
                             <span>
@@ -141,4 +165,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default Signup 
